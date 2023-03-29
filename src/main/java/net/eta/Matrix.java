@@ -7,9 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Random;
+import java.util.*;
 
 public class Matrix {
     private int sideLength;
@@ -113,12 +111,8 @@ public class Matrix {
         return new Matrix(diameter);
     }
     //TODO CentralPoints
-    public Matrix center() throws MatrixException {
-        int[][] array = this.radius().getMatrix();
-        int[][] returnArray = new int[1][this.sideWidth];
-        //TODO Algorithm
-        return new Matrix(returnArray);
-    }
+//    public Matrix center() throws MatrixException {
+//    }
     public static Matrix loadCsv(String file) throws MatrixException {
         if (file == null) {
             throw new MatrixException("file cannot be null");
