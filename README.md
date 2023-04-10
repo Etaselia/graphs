@@ -1,4 +1,4 @@
-# graphs
+# graphentool
 This Project is built to satisfy these Requirements:
 
 - Java-Programm
