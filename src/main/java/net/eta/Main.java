@@ -36,8 +36,8 @@ public class Main {
                 try {
                     int[][] a = {{4,1,7,3},{1,2,1,5},{7,1,1,4},{3,5,4,3}};
                     int[][] b = {{1,4,3,8},{5,7,4,2},{3,4,1,3},{8,2,5,1}};
-                    Matrix matrixA = new Matrix(a);
-                    Matrix matrixB = new Matrix(b);
+                    Matrix matrixA = new Matrix(a, "A");
+                    Matrix matrixB = new Matrix(b, "B");
 
 
                     System.out.println("A:");

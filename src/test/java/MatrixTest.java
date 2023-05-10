@@ -11,12 +11,15 @@ public class MatrixTest {
             m2.print();*/
             /* m1.distance().print();
             m1.eccentricity().print();*/
+            m1.print();
             m1.distance().print();
             m1.radius().print();
             m1.diameter().print();
             m1.center().print();
+            m1.components().print();
+            m1.findArticulationPoints().print();
 
-        } catch (MatrixException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
