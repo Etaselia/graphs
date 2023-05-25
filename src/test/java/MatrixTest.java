@@ -1,5 +1,4 @@
 import net.eta.Matrix;
-import net.eta.MatrixException;
 
 public class MatrixTest {
     public static void main(String[] args) {
@@ -17,7 +16,7 @@ public class MatrixTest {
             m1.diameter().print();
             m1.center().print();
             m1.components().print();
-            m1.findArticulationPoints().print();
+            m1.articulationPoints().print();
 
         } catch (Exception e) {
             System.out.println(e.getMessage());

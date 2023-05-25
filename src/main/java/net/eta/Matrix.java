@@ -1,15 +1,15 @@
 package net.eta;
-import com.opencsv.CSVWriter;
+
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-
-import static org.apache.commons.lang3.ArrayUtils.toArray;
 
 public class Matrix {
     private String name;
@@ -43,6 +43,8 @@ public class Matrix {
     public void setName(String name){
         this.name = name;
     }
+
+
     private int[][] fillRandArray(int[][] matrixA){
         Random rand = new Random();
         for (int i = 0; i < sideLength;i++){
@@ -139,7 +141,7 @@ public class Matrix {
         for (int i = 0; i < sideLength; i++) {
             if (!visited[i]) {
                 List<Integer> component = new ArrayList<>();
-                dfs(matrix, visited, i, component);
+                componentDFS(matrix, visited, i, component);
                 components.add(component);
             }
         }
@@ -152,31 +154,66 @@ public class Matrix {
         }
         return new Matrix(returnMatrix, "Components");
     }
-
-    public Matrix findArticulationPoints() {
-        boolean[] visited = new boolean[sideLength];
-        List<Integer> articulationPoints = new ArrayList<>();
-        for (int i = 0; i < sideLength; i++) {
-            if (!visited[i]) {
-                // TODO change DFS to check for Articulations, right now it checks for components
-                dfs(matrix, visited, i, articulationPoints);
-            }
-        }
-        int[][] returnMatrix = new int[1][articulationPoints.size()];
-        for (int i = 0; i < returnMatrix[0].length; i++) {
-            returnMatrix[0][i] = articulationPoints.get(i);
-        }
-        return new Matrix(returnMatrix, "Articulations");
-    }
-    private static void dfs(int[][] passedMatrix, boolean[] visited, int vertex, List<Integer> component) {
+    private void componentDFS(int[][] passedMatrix, boolean[] visited, int vertex, List<Integer> component) {
         visited[vertex] = true;
         component.add(vertex);
         for (int i = 0; i < passedMatrix.length; i++) {
             if (passedMatrix[vertex][i] == 1 && !visited[i]) {
-                dfs(passedMatrix, visited, i, component);
+                componentDFS(passedMatrix, visited, i, component);
             }
         }
     }
+    public Matrix articulationPoints() {
+        List<Integer> articulationPoints = new ArrayList<>();
+        int[] discoveryTime = new int[sideLength];
+        int[] lowTime = new int[sideLength];
+        boolean[] visited = new boolean[sideLength];
+        int[] parent = new int[sideLength];
+        Arrays.fill(parent, -1);
+        int time = 0;
+
+        for (int i = 0; i < sideLength; i++) {
+            if (!visited[i]) {
+                articulationPointsDFS(matrix, i, visited, discoveryTime, lowTime, parent, articulationPoints, time);
+            }
+        }
+
+        int[][] returnMatrix = new int[1][articulationPoints.size()];
+        for (int i = 0; i < articulationPoints.size(); i++) {
+            returnMatrix[0][i] = articulationPoints.get(i);
+        }
+        return new Matrix(returnMatrix, "Artikulation Points");
+    }
+    private void articulationPointsDFS(int[][] passedMatrix, int vertex, boolean[] visited, int[] discoveryTime, int[] lowTime, int[] parent, List<Integer> articulationPoints, int time) {
+        visited[vertex] = true;
+        int childCount = 0;
+        discoveryTime[vertex] = time;
+        lowTime[vertex] = time;
+
+        for (int i = 0; i < passedMatrix.length; i++) {
+            if (passedMatrix[vertex][i] == 1) {
+                if (!visited[i]) {
+                    childCount++;
+                    parent[i] = vertex;
+                    articulationPointsDFS(passedMatrix, i, visited, discoveryTime, lowTime, parent, articulationPoints, time + 1);
+
+                    lowTime[vertex] = Math.min(lowTime[vertex], lowTime[i]);
+
+                    if (parent[vertex] == -1 && childCount > 1) {
+                        articulationPoints.add(vertex);
+                    }
+
+                    if (parent[vertex] != -1 && lowTime[i] >= discoveryTime[vertex]) {
+                        articulationPoints.add(vertex);
+                    }
+                } else if (i != parent[vertex]) {
+                    lowTime[vertex] = Math.min(lowTime[vertex], discoveryTime[i]);
+                }
+            }
+        }
+    }
+
+
     public static Matrix loadCsv(String file) throws MatrixException {
         if (file == null) {
             throw new MatrixException("file cannot be null");
@@ -227,6 +264,9 @@ public class Matrix {
                 System.out.print(value + "\t");
             }
             System.out.println();
+        }
+        if(this.getMatrix()[0].length == 0){
+            System.out.println("EMPTY");
         }
         System.out.println("------------------");
     }
