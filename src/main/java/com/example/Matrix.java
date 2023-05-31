@@ -43,6 +43,9 @@ public class Matrix {
     public int[][] getMatrix() {
         return matrix;
     }
+    public void setMatrix(int[][] matrix) {
+        this.matrix = matrix;
+    }
     public void setName(String name){
         this.name = name;
     }
@@ -93,7 +96,7 @@ public class Matrix {
         while(true){
             for (int i = 0; i < this.getSideLength(); i++) {
                 for (int j = 0; j < this.getSideWidth(); j++) {
-                    if(i != j && distanceMatrix[i][j] == 0 && currentMatrix.getMatrix()[i][j] > 0){
+                    if(distanceMatrix[i][j] == 0 && currentMatrix.getMatrix()[i][j] > 0){
                         distanceMatrix[i][j] = powercount;
                     }
                 }
@@ -103,6 +106,9 @@ public class Matrix {
             }
             powercount++;
             currentMatrix = power(powercount);
+        }
+        for (int i = 0; i < this.getSideLength(); i++) {
+            distanceMatrix[i][i] = 0;
         }
         return new Matrix(distanceMatrix, "Distance");
     }
@@ -125,22 +131,29 @@ public class Matrix {
         return new Matrix(diameter, "Diameter");
     }
     public Matrix center() throws MatrixException {
-        ArrayList<Integer> arrayListDiameter = new ArrayList<Integer>(sideLength);
-        int[][] distanceArray = distance().getMatrix();
-        for (int i = 0; i < sideLength; i++) {
-            for (int j = 0; j < sideWidth; j++) {
-                if (distanceArray[i][j] == diameter().getMatrix()[0][0]){
-                    arrayListDiameter.add(i);
-                }
+        int radius = radius().getMatrix()[0][0];
+        int[][] eccentricity = eccentricity().getMatrix();
+        int returnLenght = 0;
+        for (int i = 0; i < eccentricity[0].length; i++) {
+            if (eccentricity[0][i] == radius){
+                returnLenght++;
             }
         }
-        int[][] outputArray = new int[1][arrayListDiameter.size()];
-        outputArray[0] = arrayListDiameter.stream().mapToInt(i -> i).toArray();
-        return new Matrix(outputArray, "Center");
+        int[][] returnArray = new int[1][returnLenght];
+        //reusing vars, cuz why not
+        returnLenght = 0;
+        for (int i = 0; i < eccentricity[0].length; i++) {
+            if (eccentricity[0][i] == radius){
+                returnArray[0][returnLenght] = i;
+                returnLenght++;
+            }
+        }
+        return new Matrix(returnArray,"Center");
     }
-    public Matrix components(){
+    public Matrix components() {
         boolean[] visited = new boolean[sideLength];
         List<List<Integer>> components = new ArrayList<>();
+
         for (int i = 0; i < sideLength; i++) {
             if (!visited[i]) {
                 List<Integer> component = new ArrayList<>();
@@ -148,19 +161,23 @@ public class Matrix {
                 components.add(component);
             }
         }
-        int[][] returnMatrix = new int[components.size()][0];
+        int[][] returnMatrix = new int[components.size()][];
         for (int i = 0; i < components.size(); i++) {
-            returnMatrix[i] = new int[components.get(i).size()];
-            for (int j = 0; j < components.get(i).size(); j++) {
-                returnMatrix[i][j] = components.get(i).get(j);
+            List<Integer> component = components.get(i);
+            returnMatrix[i] = new int[component.size()];
+
+            for (int j = 0; j < component.size(); j++) {
+                returnMatrix[i][j] = component.get(j);
             }
         }
+
         return new Matrix(returnMatrix, "Components");
     }
     private void componentDFS(int[][] passedMatrix, boolean[] visited, int vertex, List<Integer> component) {
         visited[vertex] = true;
         component.add(vertex);
-        for (int i = 0; i < passedMatrix.length; i++) {
+
+        for (int i = 0; i < passedMatrix[vertex].length; i++) {
             if (passedMatrix[vertex][i] == 1 && !visited[i]) {
                 componentDFS(passedMatrix, visited, i, component);
             }
@@ -214,6 +231,41 @@ public class Matrix {
                 }
             }
         }
+    }
+
+    public Matrix bridges(){
+        Matrix adjacencyMatrix = this;
+        int counter = 0;
+        int amountComponents = components().sideLength;
+        ArrayList<int[]> returnBridges = new ArrayList<>();
+        for (int i = 0; i < sideLength; i++) {
+            for (int j = 0; j < counter; j++) {
+                if (adjacencyMatrix.getMatrix()[i][j] == 1){
+                    int[][] workingMatrix = adjacencyMatrix.getMatrix();
+                    workingMatrix[i][j] = 0;
+                    workingMatrix[j][i] = 0;
+                    adjacencyMatrix.setMatrix(workingMatrix);
+                    if(adjacencyMatrix.components().getSideLength() > amountComponents){
+                        //i guess this is at least readable, might need to rewrite this...
+                        int[] values = new int[2];
+                        values[0] = i;
+                        values[1] = j;
+                        returnBridges.add(values);
+                    }
+                    workingMatrix[i][j] = 1;
+                    workingMatrix[j][i] = 1;
+                    //this is terrible, OOP really doesn't help here
+                    adjacencyMatrix.setMatrix(workingMatrix);
+                }
+            }
+            counter++;
+        }
+        int[][] returnArray = new int[returnBridges.size()][2];
+
+        for (int i = 0; i < returnBridges.size(); i++) {
+            returnArray[i] = returnBridges.get(i);
+        }
+        return new Matrix(returnArray, "Bridges");
     }
 
 

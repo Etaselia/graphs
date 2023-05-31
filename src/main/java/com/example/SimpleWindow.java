@@ -66,9 +66,11 @@ public class SimpleWindow extends Application {
         buttonArticulations.setMinSize(100,25);
         Button buttonSWAP = new Button("SWAP MATRIX");
         buttonSWAP.setMinSize(100,25);
+        Button buttonBridge = new Button("BRIGDES");
+        buttonBridge.setMinSize(100,25);
 
         // Arrange the buttons in a vertical box
-        VBox buttonBox = new VBox(10, button1, button2, button3, button4, button5,button6,button7,buttonComponents,buttonArticulations,buttonSWAP);
+        VBox buttonBox = new VBox(10, button1, button2, button3, button4, button5,button6,button7,buttonComponents,buttonArticulations,buttonBridge,buttonSWAP);
         buttonBox.setMinWidth(100);
         buttonBox.setAlignment(Pos.BASELINE_CENTER);
 
@@ -193,6 +195,16 @@ public class SimpleWindow extends Application {
                 new Alert(WARNING, "Error").show();
             }
         });
+
+        buttonBridge.addEventHandler(ActionEvent.ANY,actionEvent -> {
+            try {
+                SecondaryMatrix = MainMatrix.bridges();
+                rightTextArea.setText(SecondaryMatrix.toString());
+            } catch (Exception e) {
+                new Alert(WARNING, "Error" + e.getMessage()).show();
+            }
+        });
+
         buttonSWAP.addEventHandler(ActionEvent.ANY,actionEvent -> {
             try {
                 Matrix tempMatrix = MainMatrix;
