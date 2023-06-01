@@ -268,6 +268,78 @@ public class Matrix {
         return new Matrix(returnArray, "Bridges");
     }
 
+    public int[][] findEulerCycle() {
+        if (!hasEulerCycle()){
+            return new int[0][0];
+        }
+        int[][] adjMatrix = getMatrix();
+        int numVertices = sideLength;
+        List<Integer> cycle = new ArrayList<>();
+
+        // won't get around recursion on this one
+        findCycle(0, adjMatrix, cycle);
+
+        int[][] returnArray = new int[1][cycle.size()];
+        int count = 0;
+        for (int value: cycle) {
+            returnArray[0][count] = value;
+            count++;
+        }
+        return returnArray;
+    }
+
+    // TODO test this, implement line
+    private void findCycle(int vertex, int[][] adjMatrix, List<Integer> cycle) {
+        for (int nextVertexIterator = 0; nextVertexIterator < adjMatrix.length; nextVertexIterator++) {
+            if (adjMatrix[vertex][nextVertexIterator] > 0) {
+                // remove checked vertexes by setting them to 0
+                adjMatrix[vertex][nextVertexIterator]--;
+                adjMatrix[nextVertexIterator][vertex]--;
+                // recursion
+                findCycle(nextVertexIterator, adjMatrix, cycle);
+            }
+        }
+        cycle.add(vertex);
+    }
+
+    private Boolean hasEulerPath(){
+        // same as Cycle, can contain two uneven Grades
+        int unevenGrades = 0;
+        if (components().sideLength == 1){
+            for (int[] row : matrix) {
+                int sum = 0;
+                for (int value: row) {
+                    sum+=value;
+                }
+                if (sum % 2 != 0){
+                    unevenGrades += 1;
+                }
+            }
+            if(unevenGrades == 0 || unevenGrades == 2){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Boolean hasEulerCycle(){
+        //is connected
+        if (components().sideLength == 1){
+            for (int[] row : matrix) {
+                int sum = 0;
+                for (int value: row) {
+                    sum+=value;
+                }
+                //all Grade Degrees are even
+                if (sum % 2 != 0){
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
 
     public static Matrix loadCsv(String file) throws MatrixException {
         if (file == null) {
