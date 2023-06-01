@@ -16,6 +16,8 @@ public class MatrixTest {
             m1.center().print();
             m1.components().print();
             m1.bridges().print();
+            m1.eulerCycle().print();
+            m1.eulerLine().print();
 
         } catch (MatrixException e) {
             System.out.println(e.getMessage());

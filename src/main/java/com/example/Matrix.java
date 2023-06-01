@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class Matrix {
+    // TODO: Testcases, Documentation
     private String name;
     private int sideLength;
     private int sideWidth;
@@ -232,7 +233,6 @@ public class Matrix {
             }
         }
     }
-
     public Matrix bridges(){
         Matrix adjacencyMatrix = this;
         int counter = 0;
@@ -260,6 +260,10 @@ public class Matrix {
             }
             counter++;
         }
+        if (returnBridges.size() == 0){
+            // prevents an error in toString
+            return new Matrix(new int[1][0],"Bridges");
+        }
         int[][] returnArray = new int[returnBridges.size()][2];
 
         for (int i = 0; i < returnBridges.size(); i++) {
@@ -268,12 +272,16 @@ public class Matrix {
         return new Matrix(returnArray, "Bridges");
     }
 
-    public int[][] findEulerCycle() {
+    public Matrix eulerCycle() {
         if (!hasEulerCycle()){
-            return new int[0][0];
+            return new Matrix(new int[1][0], "EulerCycle");
         }
-        int[][] adjMatrix = getMatrix();
-        int numVertices = sideLength;
+        // Note to self, = simply assigns the same memory, which means it messes with the data, creating a copy below
+        int[][] adjMatrix = new int[getMatrix().length][];
+        for (int i = 0; i < getMatrix().length; i++) {
+            adjMatrix[i] = Arrays.copyOf(getMatrix()[i], getMatrix()[i].length);
+        }
+
         List<Integer> cycle = new ArrayList<>();
 
         // won't get around recursion on this one
@@ -285,10 +293,9 @@ public class Matrix {
             returnArray[0][count] = value;
             count++;
         }
-        return returnArray;
-    }
 
-    // TODO test this, implement line
+        return new Matrix(returnArray,"EulerCycle");
+    }
     private void findCycle(int vertex, int[][] adjMatrix, List<Integer> cycle) {
         for (int nextVertexIterator = 0; nextVertexIterator < adjMatrix.length; nextVertexIterator++) {
             if (adjMatrix[vertex][nextVertexIterator] > 0) {
@@ -301,27 +308,49 @@ public class Matrix {
         }
         cycle.add(vertex);
     }
-
-    private Boolean hasEulerPath(){
+    public Matrix eulerLine(){
+        // reused code, this is just the cycle, only starting at a special point
+        int[][] adjMatrix = new int[getMatrix().length][];
+        for (int i = 0; i < getMatrix().length; i++) {
+            adjMatrix[i] = Arrays.copyOf(getMatrix()[i], getMatrix()[i].length);
+        }
+        List<Integer> cycle = new ArrayList<>();
+        try{
+            // hasEulerPath returns a vertex of an unevenGrade
+            findCycle(hasEulerPath(), adjMatrix, cycle);
+        } catch (MatrixException e) {
+            // or throws an error
+            return new Matrix(new int[1][0], "EulerLine");
+        }
+        int[][] returnArray = new int[1][cycle.size()];
+        int count = 0;
+        for (int value: cycle) {
+            returnArray[0][count] = value;
+            count++;
+        }
+        return new Matrix(returnArray,"EulerLine");
+    }
+    private int hasEulerPath() throws MatrixException {
         // same as Cycle, can contain two uneven Grades
         int unevenGrades = 0;
+        int unevenVertex = 0;
         if (components().sideLength == 1){
-            for (int[] row : matrix) {
+            for (int i = 0; i < matrix.length; i++)  {
                 int sum = 0;
-                for (int value: row) {
-                    sum+=value;
+                for (int j = 0; j < matrix[i].length; j++) {
+                    sum += matrix[i][j];
                 }
                 if (sum % 2 != 0){
+                    unevenVertex = i;
                     unevenGrades += 1;
                 }
             }
-            if(unevenGrades == 0 || unevenGrades == 2){
-                return true;
+            if(unevenGrades == 2){
+                return unevenVertex;
             }
         }
-        return false;
+        throw new MatrixException("noEulerPath");
     }
-
     private Boolean hasEulerCycle(){
         //is connected
         if (components().sideLength == 1){
@@ -387,14 +416,15 @@ public class Matrix {
     public String toString(){
         StringBuffer sb = new StringBuffer(64);
         sb.append(name + ":\n");
+        if(this.getMatrix()[0].length == 0){
+            sb.append("EMPTY\n");
+            return  sb.toString();
+        }
         for (int[] ints : this.getMatrix()) {
             for (int value : ints) {
                 sb.append(value + "\t");
             }
             sb.append("\n");
-        }
-        if(this.getMatrix()[0].length == 0){
-            sb.append("EMPTY");
         }
         return sb.toString();
     }

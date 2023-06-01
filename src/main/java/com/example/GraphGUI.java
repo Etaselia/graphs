@@ -18,7 +18,8 @@ import java.util.Optional;
 import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import static javafx.scene.control.Alert.AlertType.WARNING;
 
-public class SimpleWindow extends Application {
+public class GraphGUI extends Application {
+    // I absolutely despise JavaFX, therefore I wrote this quickly and not very object-oriented, sorry
 
     private Matrix MainMatrix;
     private Matrix SecondaryMatrix;
@@ -68,9 +69,13 @@ public class SimpleWindow extends Application {
         buttonSWAP.setMinSize(100,25);
         Button buttonBridge = new Button("BRIGDES");
         buttonBridge.setMinSize(100,25);
+        Button buttonEulerCycle = new Button("EULERCYCLE");
+        buttonEulerCycle.setMinSize(100,25);
+        Button buttonEulerLine = new Button("EULERLINE");
+        buttonEulerLine.setMinSize(100,25);
 
         // Arrange the buttons in a vertical box
-        VBox buttonBox = new VBox(10, button1, button2, button3, button4, button5,button6,button7,buttonComponents,buttonArticulations,buttonBridge,buttonSWAP);
+        VBox buttonBox = new VBox(10, button1, button2, button3, button4, button5,button6,button7,buttonComponents,buttonArticulations,buttonBridge,buttonEulerCycle, buttonEulerLine ,buttonSWAP);
         buttonBox.setMinWidth(100);
         buttonBox.setAlignment(Pos.BASELINE_CENTER);
 
@@ -205,6 +210,24 @@ public class SimpleWindow extends Application {
             }
         });
 
+        buttonEulerCycle.addEventHandler(ActionEvent.ANY,actionEvent -> {
+            try {
+                SecondaryMatrix = MainMatrix.eulerCycle();
+                rightTextArea.setText(SecondaryMatrix.toString());
+            } catch (Exception e) {
+                new Alert(WARNING, "Error" + e.getMessage()).show();
+            }
+        });
+
+        buttonEulerLine.addEventHandler(ActionEvent.ANY,actionEvent -> {
+            try {
+                SecondaryMatrix = MainMatrix.eulerLine();
+                rightTextArea.setText(SecondaryMatrix.toString());
+            } catch (Exception e) {
+                new Alert(WARNING, "Error" + e.getMessage()).show();
+            }
+        });
+
         buttonSWAP.addEventHandler(ActionEvent.ANY,actionEvent -> {
             try {
                 Matrix tempMatrix = MainMatrix;
@@ -226,7 +249,7 @@ public class SimpleWindow extends Application {
 
         Scene scene = new Scene(root, 800, 600);
 
-        primaryStage.setTitle("Simple Window");
+        primaryStage.setTitle("GraphGUI");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
