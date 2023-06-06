@@ -296,7 +296,7 @@ public class Matrix {
 
         return new Matrix(returnArray,"EulerCycle");
     }
-    private void findCycle(int vertex, int[][] adjMatrix, List<Integer> cycle) {
+    void findCycle(int vertex, int[][] adjMatrix, List<Integer> cycle) {
         for (int nextVertexIterator = 0; nextVertexIterator < adjMatrix.length; nextVertexIterator++) {
             if (adjMatrix[vertex][nextVertexIterator] > 0) {
                 // remove checked vertexes by setting them to 0
