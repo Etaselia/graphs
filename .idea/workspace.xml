@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="75b4bb08-4938-4b0b-a6bc-50eb9e154e2e" name="Changes" comment="Testcases Initiaö">
-      <change afterPath="$PROJECT_DIR$/loadTest.csv" afterDir="false" />
+    <list default="true" id="75b4bb08-4938-4b0b-a6bc-50eb9e154e2e" name="Changes" comment="Testcases final">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/GraphGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/GraphGUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/Matrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/Matrix.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/example/MatrixTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/example/MatrixTest.java" afterDir="false" />
     </list>
@@ -84,7 +82,7 @@
       <recent name="com.example" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.MatrixTest.testMultiply">
+  <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="azul-17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -191,7 +189,14 @@
       <option name="project" value="LOCAL" />
       <updated>1686050102700</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Testcases final">
+      <created>1686143613477</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1686143613477</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -213,14 +218,15 @@
     <MESSAGE value="Euler Debug" />
     <MESSAGE value="Euler Upload GUI" />
     <MESSAGE value="Testcases Initiaö" />
-    <option name="LAST_COMMIT_MESSAGE" value="Testcases Initiaö" />
+    <MESSAGE value="Testcases final" />
+    <option name="LAST_COMMIT_MESSAGE" value="Testcases final" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/test/java/com/example/MatrixTest.java</url>
-          <line>52</line>
+          <line>51</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>

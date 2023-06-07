@@ -246,7 +246,7 @@ public class Matrix {
                     workingMatrix[j][i] = 0;
                     adjacencyMatrix.setMatrix(workingMatrix);
                     if(adjacencyMatrix.components().getSideLength() > amountComponents){
-                        //i guess this is at least readable, might need to rewrite this...
+                        //I guess this is at least readable, might need to rewrite this...
                         int[] values = new int[2];
                         values[0] = i;
                         values[1] = j;
@@ -381,12 +381,12 @@ public class Matrix {
             int counter = 0;
             int[][] matrix = new int[side][side];
 
-            while (line != null && line != "") {
+            while (line != null && !line.equals("")) {
                 String[] widthString;
                 widthString = line.split(";");
-                int[] width = new int[side];
+                //int[] width = new int[side];
                 for (int i = 0; i < widthString.length; i++) {
-                    matrix[counter][i] = Integer.valueOf(widthString[i]);
+                    matrix[counter][i] = Integer.parseInt(widthString[i]);
                 }
                 counter++;
                 line = br.readLine();
@@ -414,21 +414,21 @@ public class Matrix {
         }
     }
     public String toString(){
-        StringBuffer sb = new StringBuffer(64);
-        sb.append(name + ":\n");
+        StringBuilder sb = new StringBuilder(64);
+        sb.append(name).append(":\n");
         if(this.getMatrix()[0].length == 0){
             sb.append("EMPTY\n");
             return  sb.toString();
         }
         for (int[] ints : this.getMatrix()) {
             for (int value : ints) {
-                sb.append(value + "\t");
+                sb.append(value).append("\t");
             }
             sb.append("\n");
         }
         return sb.toString();
     }
     public void print(){
-        System.out.println(toString());
+        System.out.println(this);
     }
 }

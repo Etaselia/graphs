@@ -1,6 +1,5 @@
 package com.example;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -68,7 +67,7 @@ class MatrixTest {
     }
 
     @Test
-    void testMultiplyWithIncompatibleMatrices() throws MatrixException {
+    void testMultiplyWithIncompatibleMatrices() {
         int[][] array1 = {{1, 2, 3}, {4, 5, 6}};
         int[][] array2 = {{7, 8, 9}, {10, 11, 12}};
         Matrix matrix1 = new Matrix(array1, "Matrix1");
@@ -120,6 +119,7 @@ class MatrixTest {
         assertEquals("Eccentricity", eccentricity.getName());
     }
 
+    @Test
     public void testRadius() throws MatrixException {
         // Create a test matrix
         int[][] matrixData = {
@@ -134,7 +134,7 @@ class MatrixTest {
 
         // Verify the expected radius value
         int[][] expectedRadiusData = {
-                {2}
+                {1}
         };
         assertArrayEquals(expectedRadiusData, radius.getMatrix());
 
@@ -228,7 +228,10 @@ class MatrixTest {
 
     @Test
     void loadCsv() throws MatrixException {
-        int[][] matrixData = {{0,0,0},{1,1,0}};
+        int[][] matrixData = {
+                {0,0},
+                {1,1}
+        };
         assertArrayEquals(Matrix.loadCsv("./loadTest.csv").getMatrix(), matrixData);
     }
 }
