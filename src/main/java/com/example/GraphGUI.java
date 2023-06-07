@@ -90,7 +90,7 @@ public class GraphGUI extends Application {
 
         //Menus
         generateMenuItem.addEventHandler(ActionEvent.ANY, event -> {
-            MainMatrix = new Matrix(30,30,true);
+            MainMatrix = new Matrix(5,5,true);
             leftTextArea.setText(MainMatrix.toString());
         });
         saveMenuItem.addEventHandler(ActionEvent.ANY, event -> {

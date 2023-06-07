@@ -39,11 +39,26 @@ class MatrixTest {
 
     @Test
     void testMultiply() throws MatrixException {
+        //not same dimensions
         int[][] array1 = {{1, 2, 3}, {4, 5, 6}};
         int[][] array2 = {{7, 8}, {9, 10}, {11, 12}};
         int[][] expected = {{58, 64}, {139, 154}};
         Matrix matrix1 = new Matrix(array1, "Matrix1");
         Matrix matrix2 = new Matrix(array2, "Matrix2");
+        Matrix result = Matrix.multiply(matrix1, matrix2);
+        assertNotNull(result);
+        assertEquals("Multiplied", result.getName());
+        assertEquals(2, result.getSideLength());
+        assertEquals(2, result.getSideWidth());
+        assertArrayEquals(expected, result.getMatrix());
+    }
+
+    @Test
+    void testMultiplySame() throws MatrixException {
+        int[][] array1 = {{1, 2}, {4, 5}};
+        int[][] expected = {{9, 12}, {24, 33}};
+        Matrix matrix1 = new Matrix(array1, "Matrix1");
+        Matrix matrix2 = new Matrix(array1, "Matrix2");
         Matrix result = Matrix.multiply(matrix1, matrix2);
         assertNotNull(result);
         assertEquals("Multiplied", result.getName());
@@ -90,21 +105,16 @@ class MatrixTest {
     @Test
     public void testEccentricity() throws MatrixException {
         // Create a test matrix
-        int[][] matrixData = {
-                {0, 1, 3},
-                {1, 0, 2},
-                {3, 2, 0}
-        };
+        int[][] matrixData = Matrix.loadCsv("./24n_01.csv").getMatrix();
         Matrix matrix = new Matrix(matrixData, "TestMatrix");
 
         // Calculate the eccentricity
         Matrix eccentricity = matrix.eccentricity();
 
         // Verify the expected eccentricity values
-        int[][] expectedEccentricityData = {
-                {3, 2, 3}
-        };
-        assertArrayEquals(expectedEccentricityData, eccentricity.getMatrix());
+        // Note that this is dumb
+        String expected_outcome = "Eccentricity:\n9\t8\t7\t7\t6\t7\t7\t5\t6\t5\t5\t8\t9\t6\t7\t7\t6\t8\t8\t7\t7\t8\t9\t9\t\n";
+        assertEquals(expected_outcome, eccentricity.toString());
 
         // Verify the name of the resulting matrix
         assertEquals("Eccentricity", eccentricity.getName());
@@ -135,11 +145,7 @@ class MatrixTest {
     @Test
     public void testDiameter() throws MatrixException {
         // Create a test matrix
-        int[][] matrixData = {
-                {0, 1, 3},
-                {1, 0, 2},
-                {3, 2, 0}
-        };
+        int[][] matrixData = Matrix.loadCsv("./eulerCycle.csv").getMatrix();
         Matrix matrix = new Matrix(matrixData, "TestMatrix");
 
         // Calculate the diameter
@@ -179,7 +185,7 @@ class MatrixTest {
                 {1, 0, 0, 1},
                 {0, 1, 1, 0}
         };
-        List<Integer> expectedCycle = Arrays.asList(0, 1, 3, 2, 0);
+        List<Integer> expectedCycle = Arrays.asList(0, 2, 3, 1, 0); // this has multiple correct answers, which makes this testcase somewhat useless
 
         List<Integer> cycle = new ArrayList<>();
         Matrix matrix = new Matrix(adjMatrix, "TestMatrix");
@@ -189,15 +195,10 @@ class MatrixTest {
     }
 
     @Test
-    public void testEulerLine() {
-        int[][] matrixData = {
-                {0, 1, 1, 0},
-                {1, 0, 0, 1},
-                {1, 0, 0, 1},
-                {0, 1, 1, 0}
-        };
+    public void testEulerLine() throws MatrixException {
+        int[][] matrixData = Matrix.loadCsv("./eulerLine.csv").getMatrix();
         int[][] expectedEulerLineData = {
-                {0, 1, 3, 2, 0}
+                {0,1,2,3,4,5,6,7,8,9}
         };
 
         Matrix matrix = new Matrix(matrixData, "TestMatrix");
@@ -226,18 +227,8 @@ class MatrixTest {
     }
 
     @Test
-    void loadCsv() {
-    }
-
-    @Test
-    void saveCsv() {
-    }
-
-    @Test
-    void testToString() {
-    }
-
-    @Test
-    void print() {
+    void loadCsv() throws MatrixException {
+        int[][] matrixData = {{0,0,0},{1,1,0}};
+        assertArrayEquals(Matrix.loadCsv("./loadTest.csv").getMatrix(), matrixData);
     }
 }

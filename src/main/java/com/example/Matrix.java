@@ -69,10 +69,10 @@ public class Matrix {
             System.out.println("Cannot Multiply Matrices");
             throw new MatrixException("Cannot Multiply matrix's due to length != width");
         }
-        int[][] resultMatrix = new int[matrixA.getSideWidth()][matrixB.getSideLength()];
-        for (int i = 0; i < matrixA.getSideWidth(); i++){
-            for (int j = 0; j < matrixB.getSideLength();j++){
-                for (int k = 0; k < matrixA.getSideLength(); k++) {
+        int[][] resultMatrix = new int[matrixA.getSideLength()][matrixB.getSideWidth()];
+        for (int i = 0; i < matrixA.getSideLength(); i++){
+            for (int j = 0; j < matrixB.getSideWidth();j++){
+                for (int k = 0; k < matrixA.getSideWidth(); k++) {
                     resultMatrix[i][j] += matrixA.getMatrix()[i][k] * matrixB.getMatrix()[k][j];
                 }
             }
