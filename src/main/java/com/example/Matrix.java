@@ -192,13 +192,11 @@ public class Matrix {
         int[] parent = new int[sideLength];
         Arrays.fill(parent, -1);
         int time = 0;
-
         for (int i = 0; i < sideLength; i++) {
             if (!visited[i]) {
                 articulationPointsDFS(matrix, i, visited, discoveryTime, lowTime, parent, articulationPoints, time);
             }
         }
-
         int[][] returnMatrix = new int[1][articulationPoints.size()];
         for (int i = 0; i < articulationPoints.size(); i++) {
             returnMatrix[0][i] = articulationPoints.get(i);
@@ -232,6 +230,34 @@ public class Matrix {
                 }
             }
         }
+    }
+    public Matrix articulationPointsSimple(){
+        int[][] workingMatrix = deepCopyArray(getMatrix());
+        ArrayList<Integer> returnList = new ArrayList<Integer>();
+        // The + 1 makes up for an issue with the components function, it always assumes a point is connected to itself, and counts it as its own component when its a row of 0s
+        // took me a while to sort that out...
+        int numberOfComponents = components().getMatrix().length + 1;
+        for (int i = 0; i < workingMatrix.length; i++) {
+            int[][] testingMatrix = deepCopyArray(workingMatrix);
+            for (int j = 0; j < workingMatrix[0].length; j++) {
+                testingMatrix[i][j] = 0;
+                testingMatrix[j][i] = 0;
+            }
+            if (new Matrix(testingMatrix,"TestMatrix").components().sideLength > numberOfComponents){
+                returnList.add(i);
+            }
+        }
+        int[][] returnArray = new int[1][returnList.size()+1];
+        returnArray[0] = returnList.stream().mapToInt(Integer::intValue).toArray();
+        System.out.println(returnArray);
+        return new Matrix(returnArray,"Articulations");
+    }
+    private int[][] deepCopyArray(int[][] passed){
+        int[][] copy = new int[passed.length][];
+        for (int i = 0; i < passed.length; i++) {
+            copy[i] = Arrays.copyOf(passed[i], passed[i].length);
+        }
+        return copy;
     }
     public Matrix bridges(){
         Matrix adjacencyMatrix = this;
